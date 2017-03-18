@@ -4,16 +4,25 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class GroupedDictionary {
+    //Object for the words to be organized by first character
     private LinkedHashMap<Character, LinkedHashMap<Integer, String>> dictionary;
 
 
+    //Compiles this cictionary from given filename
     public GroupedDictionary(String filename){
         this.dictionary = compileDictionary(filename);
     }
 
 
+    //Gets the grouped dictionary linked map
     public LinkedHashMap<Character, LinkedHashMap<Integer, String>> getDictionary() {
         return dictionary;
+    }
+
+
+    //Check to see if word is contained in dictionary
+    public boolean isInDictionary(String word){
+        return dictionary.get(word.charAt(0)).containsValue(word);
     }
 
 
@@ -40,7 +49,7 @@ public class GroupedDictionary {
             return map;
         } catch (java.io.IOException e){
             e.printStackTrace();
-            System.exit(0);
+            System.exit(1);
             return null;
         }
     }
