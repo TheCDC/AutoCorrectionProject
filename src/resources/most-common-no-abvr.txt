@@ -1990,7 +1990,6 @@ bust
 backyard
 boise
 breeze
-buffy
 backpack
 booster
 bnet

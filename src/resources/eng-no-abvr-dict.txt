@@ -37321,7 +37321,7 @@ brager
 braggadocian
 braggadocianism
 braggadocio
-braggadocios
+braggadocious
 braggardism
 braggart
 braggartism
@@ -113472,8 +113472,6 @@ freemasonism
 freemasonry
 freemasons
 freemen
-freen
-freend
 freeness
 freenesses
 freeport

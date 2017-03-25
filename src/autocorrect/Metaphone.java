@@ -1,3 +1,5 @@
+package autocorrect;
+
 public class Metaphone {
     //                                             ABCDEFGHIJKLMNOPQRSTUVWXYZ
     private static final char[] DEFAULT_MAPPING = "vBKTvFKHvJKLMNvPKRSTvFW*YS".toCharArray();

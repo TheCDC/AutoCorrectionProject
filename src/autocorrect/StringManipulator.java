@@ -1,3 +1,5 @@
+package autocorrect;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -57,10 +59,10 @@ public class StringManipulator {
 
 
     //Checks to see if the candidate word contains only the same letters as the given word
-    public int editableDifNoDup(String firstStr, String secondStr) {
+    public int editableDifNoDup(String a, String b) {
         //Convert each strings into an array
-        char[] original = firstStr.toCharArray();
-        char[] suggested = secondStr.toCharArray();
+        char[] original = a.toCharArray();
+        char[] suggested = b.toCharArray();
         //Create a set to account for duplicates
         Set<Character> originalSet = new LinkedHashSet<>();
         for(char each : original) originalSet.add(each);
@@ -76,6 +78,35 @@ public class StringManipulator {
     }
 
 
+    //Remove repeated letters in order to determine the likelihood of a misspelled word due to
+    //accidentally forgetting or not knowing whether a word contains double letters
+    public int editableDifNoRepeat(String a, String b){
+        //Convert each strings into an array
+        char[] original = a.toCharArray();
+        char[] suggested = b.toCharArray();
+        //Variables to store the newly built string
+        String origNoRep = removeRepeatedCharacters(a);
+        String suggNoRep = removeRepeatedCharacters(b);
+        return editableDif(origNoRep, suggNoRep);
+    }
+
+
+    //Remove characters repeated in a row
+    private String removeRepeatedCharacters(String word){
+        //Convert each strings into an array
+        char[] original = word.toCharArray();
+        //Variables to store the newly built string
+        StringBuilder origNoRep = new StringBuilder();
+        //Remove Duplicates
+        for(int i = 0; i < word.length(); i++){
+            if(i < word.length()-1 && original[i] != original[i+1]) origNoRep.append(original[i]);
+            else if(i == word.length()-1) origNoRep.append(original[i]);
+        }
+        //Return the string without repeated characters
+        return origNoRep.toString();
+    }
+
+
     //Correct capitalization of string
     public String checkCapitalization(String each, String correctedWord){
         //Check if original word was capitalized
@@ -85,5 +116,19 @@ public class StringManipulator {
             correctedWord = correctedWord.toUpperCase();
         }
         return correctedWord;
+    }
+
+
+    //Check for valid form of plural word
+    public String pluralityCheck(String word, GroupedDictionary dict){
+        //If word ends in s
+        if(word.charAt(word.length()-1) == 's'){
+            //Try to convert word to a plural form ending in 'es'
+            word = word.substring(0, word.length()-1) + "es";
+            //Check if this form is a valid word
+            if(dict.isInDictionary(word))
+                return word;
+        }
+        return null;
     }
 }
