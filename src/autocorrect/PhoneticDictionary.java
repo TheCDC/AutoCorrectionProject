@@ -50,7 +50,7 @@ public class PhoneticDictionary {
             map.putIfAbsent(phoneticCode, new ArrayList<>());
             //Get array list at given phonetic code
             ArrayList<String> phoneticGroup = map.get(phoneticCode);
-            //Add the word to the array list at given phonetic key produced by soundex
+            //Add the word to the array list at given phonetic key produced by metaphone
             phoneticGroup.add(each);
             //Add group back into array list
             map.put(phoneticCode, phoneticGroup);

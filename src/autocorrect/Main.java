@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-        System.out.println("Auto Spelling Correction V1.3");
+        System.out.println("Auto Spelling Correction V1.4");
         //Auto correct is using a standard dictionary to compare if a given word is misspelled
         // and a list of about 18k most common words to compare the most probable words
         // and has a tolerance setting of 5. The greater the tolerance, the more it will try

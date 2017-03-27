@@ -7,8 +7,13 @@ import java.util.Set;
 public class StringManipulator {
 
     //First call to recursive permutations algorithm
-    public void permutation(String str, GroupedDictionary dict, ArrayList<String> permutations) {
+    public String[] permutation(String str, GroupedDictionary dict) {
+        ArrayList<String> permutations = new ArrayList<>();
         permutation("", str, dict, permutations);
+        //Turn back String[] and return values
+        String[] words = new String[permutations.size()];
+        words = permutations.toArray(words);
+        return words;
     }
     //Obtains all the permutations of the given word and only adds those that are valid words to the plausible list
     private void permutation(String prefix, String str, GroupedDictionary dict, ArrayList<String> permutations) {
@@ -21,6 +26,35 @@ public class StringManipulator {
             for (int i = 0; i < n; i++)
                 permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n), dict, permutations);
         }
+    }
+
+
+    //Swaps two letters at the given positions a and b
+    public String swapCharacter(String s, int a, int b){
+        char[] carr = s.toCharArray();
+        char tmp = carr[a];
+        carr[a] = carr[b];
+        carr[b] = tmp;
+        return new String(carr);
+    }
+
+
+    //List of words that are valid if two letters are swapped in a string
+    public String[] validWordsViaSwap(String word, GroupedDictionary dict){
+        //Create an array list to hold the valid words
+        ArrayList<String> validWords = new ArrayList<>();
+        //Break down the word into a char array
+        char[] wordArray = word.toCharArray();
+        //Iterate over array of word and swap letters next to each other, if that makes a valid word, add it to list
+        for(int i = wordArray.length-1; i > 0; i--){
+            String candidate = swapCharacter(word, i, i-1);
+            if(dict.isInDictionary(candidate))
+                validWords.add(candidate);
+        }
+        //Turn into String[] and return values
+        String[] words = new String[validWords.size()];
+        words = validWords.toArray(words);
+        return words;
     }
 
 
@@ -130,5 +164,14 @@ public class StringManipulator {
                 return word;
         }
         return null;
+    }
+
+
+    //Concatenate two arrays
+    public String[] concat(String[] a, String[] b){
+        String[] c = new String[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
     }
 }

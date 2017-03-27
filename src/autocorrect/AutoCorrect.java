@@ -37,7 +37,7 @@ public class AutoCorrect {
                 if (lowerCase.length() > 1 && !dictionary.isInDictionary(lowerCase)) {
                     //If word is not in the dictionary
                     String correctedWord = null;
-                    correctedWord = autoCorrect(lowerCase, plausibleWords(lowerCase), 1);
+                    correctedWord = autoCorrect(lowerCase, allPlausibleWords(lowerCase), 1);
                     //Add the original word and the suggested word
                     correctedWord = stringManipulator.checkCapitalization(each, correctedWord);
                     wordMap.put(each, correctedWord);
@@ -72,7 +72,7 @@ public class AutoCorrect {
             //Loop through each word in the list of most common words that start with the letter
             for (String each : dict) {
                 //Get editable distance for each word
-                int diff = stringManipulator.editableDif(word, each) + stringManipulator.editableDifNoDup(word, each);
+                int diff = stringManipulator.editableDif(word, each) + stringManipulator.editableDifNoRepeat(word, each);
                 //If the editable distance is less then the current min
                 //System.out.println(word + " -> " + each + " " + diff);
                 if (diff < currentClosest) {
@@ -95,24 +95,43 @@ public class AutoCorrect {
     }
 
 
+    //Generate plausible word list
+    private String[] allPlausibleWords(String word){
+        String[] primary = plausibleWords(word);
+        String[] secondary = plausibleWords(stringManipulator.swapCharacter(word,1,0));
+        return stringManipulator.concat(primary, secondary);
+    }
+
+
     //Get all words that would be plausible suggestions
     private String[] plausibleWords(String word){
-        //Array list to hold list of plausible words
-        ArrayList<String> combined = new ArrayList<>();
+        //Set to hold list of plausible words, there will be no duplicates
+        Set<String> combined = new LinkedHashSet<>();
         //Get valid permutations of the given word if word is reasonable length
-        if(word.length() <= 5)
-            stringManipulator.permutation(word, dictionary, combined);
+        try {
+            for (String each : stringManipulator.validWordsViaSwap(word, dictionary))
+                combined.add(each);
+        } catch (NullPointerException e){}
         //Check dictionary for a plurality mistake if the word ends in s
         String possiblePluralForm = stringManipulator.pluralityCheck(word, dictionary);
         if(possiblePluralForm != null) {
             combined.add(possiblePluralForm);
         }
         //Get list of common words starting with similar letters
-        for(String each : commonDictionary.getRelevantWords(word, true)) combined.add(each);
+        try {
+            for (String each : commonDictionary.getReleventPhoneticWords(word)) combined.add(each);
+        } catch (NullPointerException e){}
         //Add phonetically similar words if such a list of words exist
         try {
             for (String each : phoneticDictionary.getRelevantWords(word)) combined.add(each);
         } catch(NullPointerException e){}
+        //Get list of common words starting with similar letters
+        try {
+            for (String each : commonDictionary.getRelevantWords(word)) {
+                if(stringManipulator.editableDifNoDup(word, each) <= 3)
+                    combined.add(each);
+            }
+        } catch (NullPointerException e){}
         //Turn plausible words back into a string array
         String[] plausibleWords = new String[combined.size()];
         plausibleWords = combined.toArray(plausibleWords);
